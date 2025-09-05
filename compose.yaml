@@ -1,0 +1,33 @@
+services:
+  nginx:
+    image: nginx:alpine
+    working_dir: /application
+    volumes:
+      - ./:/application
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:r
+    ports:
+      - "8080:80"
+    networks:
+      - app
+  php-fpm:
+    build:
+      context: php-fpm
+    working_dir: /application
+    volumes:
+      - ./:/application
+      - ./php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+    environment:
+      XDEBUG_MODE: develop,debug
+      XDEBUG_CONFIG: client_port=9003 client_host=$XDEBUG_CLIENT_HOST
+      PHP_IDE_CONFIG: serverName=token-verify
+    networks:
+      - app
+  mailpit:
+    image: axllent/mailpit
+    networks:
+      - app
+    ports:
+      - "8025:8025"
+networks:
+  app:
+    name: token-verify-dev

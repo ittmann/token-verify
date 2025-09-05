@@ -1,0 +1,18 @@
+{
+  "name": "ittmann/token-verify",
+  "type": "project",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Ittmann\\TokenVerify\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^8.3",
+    "phpmailer/phpmailer": "^6.10",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
