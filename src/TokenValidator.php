@@ -10,6 +10,7 @@ use PHPMailer\PHPMailer\SMTP;
 class TokenValidator
 {
     private bool $debug = false;
+    private array $debug_data = [];
     private string $smtp_server;
     private bool $smtp_auth;
     private string $smtp_username;
@@ -57,6 +58,14 @@ class TokenValidator
         $code  = $_POST['code'] ?? null;
 
         $email = is_string($email) ? trim($email) : null;
+
+        if ($this->debug) {
+            $this->debug_data['request_parameters'] = [
+                'action' => $action,
+                'email' => $email,
+                'code' => $code,
+            ];
+        }
 
         if ($email !== null && filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             $this->errorResponse(400, 'Invalid email');
@@ -199,8 +208,10 @@ class TokenValidator
 
     private function jsonResponse(array $data): void {
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($data);
-        die();
+        if ($this->debug) {
+            $data['debug'] = $this->debug_data;
+        }
+        exit(json_encode($data));
     }
 
     private function errorResponse(int $errorCode, string $errorText): void
@@ -210,6 +221,7 @@ class TokenValidator
         ];
         $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
         header("$protocol $errorCode $httpCodes[$errorCode]");
-        $this->jsonResponse($errorText);
+        $responseData = ['error' => $errorText];
+        $this->jsonResponse($responseData);
     }
 }
