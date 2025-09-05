@@ -9,6 +9,7 @@ use PHPMailer\PHPMailer\SMTP;
 
 class TokenValidator
 {
+    private bool $debug = false;
     private string $smtp_server;
     private bool $smtp_auth;
     private string $smtp_username;
@@ -30,11 +31,12 @@ class TokenValidator
         $this->setEnvValues();
         $this->pdo = $this->initDb();
     }
-    
+
     private function setEnvValues(): void
     {
+        $this->debug = ($_ENV['APP_DEBUG'] ?? 'false') === 'true';
         $this->smtp_server = $_ENV['SMTP_SERVER'] ?? 'smtp.example.com';
-        $this->smtp_auth = $_ENV['SMTP_AUTH'] ?? 'true' === 'true';
+        $this->smtp_auth = ($_ENV['SMTP_AUTH'] ?? 'true') === 'true';
         $this->smtp_username = $_ENV['SMTP_USERNAME'] ?? 'user@example.com';
         $this->smtp_password = $_ENV['SMTP_PASSWORD'] ?? 'secret';
         $this->mail_from_address = $_ENV['MAIL_FROM_ADDRESS'] ?? 'from@example.com';
