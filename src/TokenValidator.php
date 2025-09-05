@@ -114,7 +114,7 @@ class TokenValidator
                 }
                 break;
             default:
-                $this->errorResponse(400, 'Invalid action');
+                $this->errorResponse(400, empty($action) ? 'Missing action parameter' : 'Invalid action');
         }
     }
 
