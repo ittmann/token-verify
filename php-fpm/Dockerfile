@@ -15,4 +15,5 @@ RUN set -xe && \
       wget \
       zip && \
     install-php-extensions \
-      xdebug
+      xdebug \
+      zip
